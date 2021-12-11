@@ -1,0 +1,28 @@
+<%# -*- coding: utf-8 -*-%>
+<% require 'bundler' %>
+<%  Bundler.require %>
+
+<% dbh = DBI.connect('DBI:SQLite3:students.db') %>
+
+<% sth = dbh.execute("select * from students") %>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <ul>
+      <% sth.each do |row| %>
+        <% row.each_with_name do |val, name| %>
+          <li><%= "#{name}: #{val.to_s}" %></li>
+        <% end %>
+      <% end %>
+    </ul>
+  </body>
+</html>
+
+<% sth.finish %>
+
+<% dbh.disconnect %>

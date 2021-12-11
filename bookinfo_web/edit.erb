@@ -1,0 +1,48 @@
+<%# -*- coding: utf-8 -*-%>
+<% require 'bundler' %>
+<% Bundler.require %>
+
+<% dbh = DBI.connect('DBI:SQLite3:bookinfo_sqlite.db') %>
+
+<% sth = dbh.execute("select * from bookinfos where id = \'#{target_id}\'") %>
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="content-type" content="text/html" charset="utf-8">
+    <link rel="stylesheet" href="default.css" type="text/css">
+    <title>蔵書管理</title>
+  </head>
+  <body>
+    <h1>蔵書管理</h1>
+    <h2>蔵書データの修正</h2>
+    <p>
+      このデータを修正します｜
+      <a href="list.erb">蔵書データの表示</a>｜
+      <a href="index.html">メニュー画面に戻る</a>
+    </p>
+    <hr>
+    <form class="" action="edit" method="post">
+      <input type="hidden" name="id" value="<%= target_id %>">
+      <table>
+<% sth.each do |row| %>
+        <tr>
+          <th>項目名</th><th>修正データ</th>
+        </tr>
+<% ['id', 'title', 'author', 'page', 'publish_date'].each do |name| %>
+        <tr>
+          <td><%= name %></td>
+<% if name == 'id' %>
+          <td><%= row[name] %></td>
+<% else %>
+          <td><input type="text" name="<%= name %>" value="<%= row[name] %>" size="60"></td>
+<% end %>
+        </tr>
+<% end %>
+<% end %>
+      </table>
+      <input type="submit" name="" value="修正を実行">
+    </form>
+    <hr>
+  </body>
+</html>
